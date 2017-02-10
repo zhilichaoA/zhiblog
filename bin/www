@@ -1,33 +1,38 @@
-#!/usr/bin/env node
+#!/usr/bin/env node  可执行文件
 
 /**
- * Module dependencies.
+ * Module dependencies.(模块依赖)
  */
-
+//引入app文件
 var app = require('../app');
+//日志记录器 通过修改DEBUG环境变量来控制输出
 var debug = require('debug')('zhiblog:server');
 var http = require('http');
 
 /**
  * Get port from environment and store in Express.
+ * 从环境变量中获取端口号并保存到express中.
  */
-
+//process.env.PORT || '80' 从环境变种读取PORT如果有值就是它,没有就是80
 var port = normalizePort(process.env.PORT || '80');
+//设置保存到app的一个私有属性中
 app.set('port', port);
 
 /**
  * Create HTTP server.
+ * 创建服务
  */
 
 var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
+ * 监听提供的端口
  */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+server.listen(port);//启动服务
+server.on('error', onError);//调用出错是时候调用onError
+server.on('listening', onListening);//调用成功的话调用onListening
 
 /**
  * Normalize a port into a number, string, or false.
@@ -52,7 +57,7 @@ function normalizePort(val) {
 /**
  * Event listener for HTTP server "error" event.
  */
-
+//出错的回调
 function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
@@ -64,12 +69,13 @@ function onError(error) {
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+    //没有权限 在linux用户不能是用1000以下的断就,想用必须root用户才能用
+    case 'EACCES'://没有权限
+      console.error(bind + ' 需要提升权限');
       process.exit(1);
       break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+    case 'EADDRINUSE'://端口被占用
+      console.error(bind + ' 已经在使用');
       process.exit(1);
       break;
     default:
@@ -80,8 +86,9 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
+//成功后的回调
 function onListening() {
+  //获取到绑定的地址
   var addr = server.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
